@@ -10,17 +10,17 @@ fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=51&lon=0&appid=${API
         console.log(err)
     })*/
 
-// FORM ELEMENT STORED IN VARIABLE
+// Form element stored in varaible
 const formEl = document.getElementById('submitForm');
 
-// EVENT-LISTENER ON FORM ELEMENT CALLING FUNCTION TO GET API DATA
+// Calling function to get API data
 formEl.addEventListener('submit', function (event) {
   event.preventDefault();
   const city = document.getElementById('query').value;
   fetchWeatherData(city);
 });
 
-// FUNCTION TO FETCH WEATHER DATA
+// Fetch weather data
 async function fetchWeatherData(city) {
   try {
     const latLon = await getLatLon(city);
@@ -38,7 +38,7 @@ async function fetchWeatherData(city) {
   }
 }
 
-// FUNCTION TO GET COORDINATES (LAT/LON) FROM API CALL
+// Get coordinates from API call
 async function getLatLon(city) {
   const queryUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=&appid=${APIKey}`;
   const response = await fetch(queryUrl);
@@ -49,7 +49,7 @@ async function getLatLon(city) {
   return data.length > 0 ? [data[0].lat, data[0].lon] : null;
 }
 
-// FUNCTION TO GET THE FORECAST DATA
+// Get forecast data
 async function getForecast(lat, lon) {
   const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}&units=metric`;
   const response = await fetch(url);
@@ -60,7 +60,7 @@ async function getForecast(lat, lon) {
   return data;
 }
 
-// FUNCTION TO GET THE CURRENT WEATHER DATA
+// Get current weather
 async function getCurrentWeather(lat, lon) {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKey}&units=metric`;
   const response = await fetch(url);
@@ -71,29 +71,46 @@ async function getCurrentWeather(lat, lon) {
   return data;
 }
 
-// FUNCTION TO CREATE THE ELEMENTS FOR THE CURRENT WEATHER AND DISPLAY THE DATA
+// Function to create elements for current weather & display data
 function updateCurrentWeather(currentWeather) {
   document.getElementById("currentCity").textContent = currentWeather.name;
-  document.getElementById("currentDate").textContent = new Date(currentWeather.dt * 1000).toLocaleDateString();
-  document.getElementById("currentIcon").src = `https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png`;
-  document.getElementById("currentTemp").textContent = currentWeather.main.temp;
-  document.getElementById("currentWind").textContent = currentWeather.wind.speed;
-  document.getElementById("currentHumidity").textContent = currentWeather.main.humidity;
+  const date = new Date(currentWeather.dt * 1000);
+  document.getElementById("currentDate").textContent = formatDate(date);
+  document.getElementById("currentIcon").src = `https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png`;
+
+  // Format the values with unit strings
+  const temperature = `${currentWeather.main.temp}°C`;
+  const windSpeed = `${currentWeather.wind.speed} mph`;
+  const humidity = `${currentWeather.main.humidity}%`;
+
+  // Update the innerHTML of the <span> elements to show the actual weather values
+  document.getElementById("currentTemp").innerHTML = `Temperature: ${temperature}`;
+  document.getElementById("currentWind").innerHTML = `Wind: ${windSpeed}`;
+  document.getElementById("currentHumidity").innerHTML = `Humidity: ${humidity}`;
 }
 
-// FUNCTION TO CREATE THE ELEMENTS FOR THE 5 DAY FORECAST AND DISPLAY THE DATA
+// Function to format the date as "dd mm yyyy"
+function formatDate(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so need to add 1
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+// Function to create elements for forecast & display data
 function updateForecast(forecast) {
   const cards = document.getElementById("cards");
   cards.innerHTML = '';
   for (let i = 2; i < forecast.list.length; i += 8) {
     const outerDiv = document.createElement('div');
     outerDiv.classList.add('col-2', 'five-day');
+    const date = new Date(forecast.list[i].dt * 1000);
     outerDiv.innerHTML = `
-      <h5>${new Date(forecast.list[i].dt * 1000).toLocaleDateString()}</h5>
-      <img src="https://openweathermap.org/img/wn/${forecast.list[i].weather[0].icon}@2x.png" alt="icon">
-      <p>Temp: ${forecast.list[i].main.temp}</p>
-      <p>Wind: ${forecast.list[i].wind.speed}</p>
-      <p>Humidity: ${forecast.list[i].main.humidity}</p>
+      <h5>${formatDate(date)}</h5>
+      <img src="https://openweathermap.org/img/wn/${forecast.list[i].weather[0].icon}.png" alt="icon" class="forecast-icon">
+      <p>Temp: ${forecast.list[i].main.temp}°C</p>
+      <p>Wind: ${forecast.list[i].wind.speed} mph</p>
+      <p>Humidity: ${forecast.list[i].main.humidity}%</p>
     `;
     cards.append(outerDiv);
   }

@@ -1,0 +1,88 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+header {
+    text-align: center;
+    background: linear-gradient(260deg, rgb(30, 24, 73) 0%, rgb(97, 100, 198) 100%);
+}
+
+header h1 {
+    width: 75%;
+    text-align: right;
+    color: white;
+}
+
+.main-container {
+    margin: 0 10px;
+}
+
+.searchSection {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid black;
+    float: left;
+}
+
+.input {
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+}
+
+#searchBtn {
+margin-top: 10px;
+padding: 5px 0px;
+width: 100%;
+background-color: #b0b0f6;
+color: white;
+}
+
+weather-display {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid black;
+}
+
+.city-date {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+img#currentIcon {
+    height: 60px;
+}
+
+.five-day {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px;
+    background-color: #27324c;
+    color: white;
+}
+
+.forecast-icon {
+    height: 60px;
+}
+
+div#cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
