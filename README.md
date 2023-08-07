@@ -1,5 +1,5 @@
 # Server-side-APIs-Weather-Dash
-A weather dashboard that will run in the browser &amp; feature dynamically updated HTML and CSS using third party APIs - 
+A weather dashboard that will run in the browser &amp; feature dynamically updated HTML and CSS using third party APIs
 
 Description: This project enables a user to input their desired location to display both the current weather and a 5 day weather forecast, as well as save their location history and remove individual locations from that history if they so choose.
 
