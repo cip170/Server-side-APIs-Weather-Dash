@@ -1,16 +1,8 @@
-var APIKey = "3be65c41f433942560887b079237f6e8"
+var APIKey = "3be65c41f433942560887b079237f6e8";
 
-/*
-fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=51&lon=0&appid=${APIKey}`)
-    .then((result) => {
-        return result.json()
-    }).then(function (data) {
-        console.log(data)
-    }).catch((err) => {
-        console.log(err)
-    })*/
+const searchHistory = [];
 
-// Form element stored in varaible
+// Form element stored in variable
 const formEl = document.getElementById('submitForm');
 
 // Calling function to get API data
@@ -20,7 +12,7 @@ formEl.addEventListener('submit', function (event) {
   fetchWeatherData(city);
 });
 
-// Fetch weather data
+// Fetch weather data from the API
 async function fetchWeatherData(city) {
   try {
     const latLon = await getLatLon(city);
@@ -30,6 +22,15 @@ async function fetchWeatherData(city) {
         getCurrentWeather(lat, lon),
         getForecast(lat, lon)
       ]);
+
+      // Add the city to the search history array if it's not already present
+      if (!searchHistory.includes(city)) {
+        searchHistory.push(city);
+      }
+
+      // Update the search history element in the HTML
+      updateSearchHistory();
+
       updateCurrentWeather(currentWeather);
       updateForecast(forecast);
     }
@@ -38,7 +39,25 @@ async function fetchWeatherData(city) {
   }
 }
 
-// Get coordinates from API call
+function addToSearchHistory(city) {
+  searchHistory.push(city);
+  updateSearchHistory();
+}
+
+function updateSearchHistory() {
+  const searchHistoryEl = document.getElementById("search-history");
+  searchHistoryEl.innerHTML = ''; // Clear any existing content
+
+  // Create a list item for each city in the search history
+  searchHistory.forEach((city) => {
+    const listItem = document.createElement('li-history');
+    listItem.textContent = city;
+    searchHistoryEl.appendChild(listItem);
+  });
+}
+
+
+// Get latitude & longitude coordinates for the city from the API
 async function getLatLon(city) {
   const queryUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=&appid=${APIKey}`;
   const response = await fetch(queryUrl);
@@ -49,7 +68,7 @@ async function getLatLon(city) {
   return data.length > 0 ? [data[0].lat, data[0].lon] : null;
 }
 
-// Get forecast data
+// Get forecast data from the API
 async function getForecast(lat, lon) {
   const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}&units=metric`;
   const response = await fetch(url);
@@ -60,7 +79,7 @@ async function getForecast(lat, lon) {
   return data;
 }
 
-// Get current weather
+// Get current weather data from the API
 async function getCurrentWeather(lat, lon) {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKey}&units=metric`;
   const response = await fetch(url);
@@ -71,30 +90,46 @@ async function getCurrentWeather(lat, lon) {
   return data;
 }
 
-// Function to create elements for current weather & display data
-function updateCurrentWeather(currentWeather) {
-  document.getElementById("currentCity").textContent = currentWeather.name;
-  const date = new Date(currentWeather.dt * 1000);
-  document.getElementById("currentDate").textContent = formatDate(date);
-  document.getElementById("currentIcon").src = `https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png`;
-
-  // Format the values with unit strings
-  const temperature = `${currentWeather.main.temp}°C`;
-  const windSpeed = `${currentWeather.wind.speed} mph`;
-  const humidity = `${currentWeather.main.humidity}%`;
-
-  // Update the innerHTML of the <span> elements to show the actual weather values
-  document.getElementById("currentTemp").innerHTML = `Temperature: ${temperature}`;
-  document.getElementById("currentWind").innerHTML = `Wind: ${windSpeed}`;
-  document.getElementById("currentHumidity").innerHTML = `Humidity: ${humidity}`;
+// Function to formate the date as (dd/mm/yyyy)
+function formatDateWithBrackets(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so need to add 1
+  const year = date.getFullYear();
+  return `(${day}/${month}/${year})`;
 }
 
-// Function to format the date as "dd mm yyyy"
-function formatDate(date) {
+// Function to format the date as dd//mm/yyyy without brackets in the future forecast
+function formatDateWithoutBrackets(date) {
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so need to add 1
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
+}
+
+// Function to create elements for current weather & display data
+function updateCurrentWeather(currentWeather) {
+  const cityDateElement = document.getElementById("currentCityDate");
+  cityDateElement.innerHTML = ''; // Clear any existing content
+
+// Update cty & date together without brackets
+  const city = currentWeather.name;
+  const date = new Date(currentWeather.dt * 1000);
+  const formattedDate = formatDateWithBrackets(date);
+  cityDateElement.textContent = `${city} ${formattedDate}`;
+
+// Format the values with unit strings
+  const temperature = `${currentWeather.main.temp}°C`;
+  const windSpeed = `${currentWeather.wind.speed} mph`;
+  const humidity = `${currentWeather.main.humidity}%`;
+
+// Update the innerHTML of the <span> elements to display the actual weather values
+  document.getElementById("currentTemp").innerHTML = `Temperature: ${temperature}`;
+  document.getElementById("currentWind").innerHTML = `Wind: ${windSpeed}`;
+  document.getElementById("currentHumidity").innerHTML = `Humidity: ${humidity}`;
+
+// Update the weather icon
+  const iconCode = currentWeather.weather[0].icon;
+  document.getElementById("currentIcon").src = `https://openweathermap.org/img/wn/${iconCode}.png`;
 }
 
 // Function to create elements for forecast & display data
@@ -105,8 +140,9 @@ function updateForecast(forecast) {
     const outerDiv = document.createElement('div');
     outerDiv.classList.add('col-2', 'five-day');
     const date = new Date(forecast.list[i].dt * 1000);
+    const formattedDate = formatDateWithoutBrackets(date);
     outerDiv.innerHTML = `
-      <h5>${formatDate(date)}</h5>
+      <h5>${formattedDate}</h5>
       <img src="https://openweathermap.org/img/wn/${forecast.list[i].weather[0].icon}.png" alt="icon" class="forecast-icon">
       <p>Temp: ${forecast.list[i].main.temp}°C</p>
       <p>Wind: ${forecast.list[i].wind.speed} mph</p>
@@ -115,3 +151,8 @@ function updateForecast(forecast) {
     cards.append(outerDiv);
   }
 }
+
+// Function to be called after page loads to initialize search history
+window.addEventListener('load', () => {
+  updateSearchHistory();
+});

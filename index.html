@@ -10,34 +10,36 @@
 </head>
 
 <body>
-    <container>
+    <div class="container-fluid">
         <header>
             <h1><strong>Weather Dashboard</strong></h1>
         </header>
-    </container>
-    <div class ="main-container">
-        <div>
-        <form class="searchSection" id="submitForm">
-            <h2><strong>Search for a City:</strong></h2>
-            <input type="text" class="input" id="query">
-            <button class="searchButton" id="searchBtn">Search</button>
-        </form>
+        <div class="main-container row">
+            <div class="col-3">
+                <form class="col-12 searchSection" id="submitForm">
+                    <h2><strong>Search for a City:</strong></h2>
+                    <input type="text" class="input" id="query">
+                    <button class="searchButton" id="searchBtn">Search</button>
+                </form>
+                <div class="row d-flex flex-column" id="search-history"></div>
+            </div>
+            <div class="col-9">
+                <weather-display class="col-12">
+                    <div class="city-date">
+                        <h3 class="city-date" id="currentCityDate"></h3>
+                        <img id="currentIcon" src="" alt="Weather Icon">
+                    </div>
+                    <p><span id="currentTemp">Temperature: </span></p>
+                    <p><span id="currentWind">Wind: </span></p>
+                    <p><span id="currentHumidity">Humidity: </span></p>
+                </weather-display>
+                <future-forecast>
+                    <h3 class="forecast-text">5-Day Forecast:</h3>
+                    <div class="5DayCards col-12" id="cards"></div>
+                </future-forecast>
+            </div>
         </div>
-    <weather-display>
-        <div class="city-date">
-        <h3 class="city" id="currentCity"></h3>
-        <h3 class="date" id="currentDate"></h3> <img id="currentIcon" src="" alt="Weather Icon">
-        </div>
-        <p><span id="currentTemp">Temperature: </span></p>
-        <p><span id="currentWind">Wind: </span></p>
-        <p><span id="currentHumidity">Humidity: </span></p>
-    </weather-display>
-    <future-forecast>
-        <h3>5-Day Forecast</h3>
-        <div class="5DayCards col-12" id="cards"></div>
-    </future-forecast>
     </div>
-
 
     <script src="./assets/js/script.js"></script>
 </body>
