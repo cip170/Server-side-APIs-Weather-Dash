@@ -2,7 +2,15 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+body {
+    width:100%;
+}
+
+.container-fluid {
+    padding: 0%;
 }
 
 header {
@@ -12,12 +20,16 @@ header {
 
 header h1 {
     width: 75%;
+    padding: 10px;
     text-align: right;
+    font-size: 25px;
+    font-weight: bold;
     color: white;
 }
 
 .main-container {
     margin: 0 10px;
+    padding-top: 20px; /* Add padding to separate from header */
 }
 
 .searchSection {
@@ -25,8 +37,12 @@ header h1 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    border: 1px solid black;
-    float: left;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.searchSection h2 {
+    font-size: 20px;
 }
 
 .input {
@@ -36,21 +52,40 @@ header h1 {
 }
 
 #searchBtn {
-margin-top: 10px;
-padding: 5px 0px;
-width: 100%;
-background-color: #b0b0f6;
-color: white;
+    margin-top: 10px;
+    padding: 5px 0px;
+    width: 100%;
+    font-size: 15px;
+    background-color: #b0b0f6;
+    color: white;
+    border-style: none;
+    border-radius: 5px;
 }
 
-weather-display {
-    padding: 20px;
+.history {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+}
+
+button.history-button {
+    width: 90%;
+    margin-bottom: 5px;
+    border-style: none;
+    border-radius: 5px;
+    background-color: #dcdcdc;
+}
+
+button.remove-button {
+    float: right;
     border: 1px solid black;
+}
+
+div.weather-display {
+    border: 1px solid black;
+    background-color: #eaf0fd;
+    padding: 5px;
+    margin-bottom: 10px;
 }
 
 .city-date {
@@ -66,6 +101,11 @@ img#currentIcon {
     height: 60px;
 }
 
+.forecast-text {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
 .five-day {
     display: flex;
     flex-wrap: wrap;
@@ -75,6 +115,15 @@ img#currentIcon {
     padding: 5px;
     background-color: #27324c;
     color: white;
+}
+
+.five-day h5 {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+p {
+    font-size: 15px;
 }
 
 .forecast-icon {
