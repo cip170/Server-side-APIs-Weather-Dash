@@ -37,6 +37,8 @@ header h1 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
 }
 
 .searchSection h2 {
@@ -66,14 +68,24 @@ header h1 {
     align-items: center;
 }
 
-.weather-display {
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    flex-direction: column;
-    align-items: flex-start;
+button.history-button {
+    width: 90%;
+    margin-bottom: 5px;
+    border-style: none;
+    border-radius: 5px;
+    background-color: #dcdcdc;
+}
+
+button.remove-button {
+    float: right;
     border: 1px solid black;
+}
+
+div.weather-display {
+    border: 1px solid black;
+    background-color: #eaf0fd;
+    padding: 5px;
+    margin-bottom: 10px;
 }
 
 .city-date {
@@ -91,6 +103,7 @@ img#currentIcon {
 
 .forecast-text {
     font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .five-day {
